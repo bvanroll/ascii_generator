@@ -4,30 +4,29 @@ use std::io;
 use fontdue;
 use std::collections::HashMap;
 use std::ops::Add;
+use std::fs::File;
 
 
 fn main() {
     let args: Vec<String> = env::args().collect();
-    //let path = &args[1];
-    //let path2 = &String::from("/Users/beppe/Git/asciiGenerator/fonts/Lucida Console.ttf");
-    let data = include_bytes!("/Users/beppe/Git/asciiGenerator/fonts/Lucida Console.ttf") as &[u8];
+    //let mut currentPath = env::current_dir().expect("what").as_path();
+    let data = fs::read("./font/Lucida Console.ttf").expect("it didnt work");
     let font = fontdue::Font::from_bytes(data, fontdue::FontSettings::default()).expect("yessir");
-    let mut output: HashMap<char,   [[u8]]> = HashMap::new(); //todo Second value should be bitmap type???
+    let mut output: HashMap<char, Vec<Vec<u8>>> = HashMap::new(); //todo Second value should be bitmap type???
     let mut char_index:u32 = 0;
     //NOTE this starts at 0
     const RASTER_FACTOR: f32 = 15.0;
-    while char_index < 1000000 {
-        let char = std::char::from_u32(char_index).expect("yessiiiiiir");
+    while char_index < 10000 {
+        let char = std::char::from_u32(char_index).expect("error converting u32 to char");
         char_index += 1;
         let (metrics, mut unsorted_raster) = font.rasterize(char, RASTER_FACTOR);
         if (unsorted_raster.len() > 0) {
 
 
-            (chunks, remainder) = unsorted_raster.as_chunks(RASTER_FACTOR as usize);
-            output.insert(char, chunks.clone());
+            //(chunks, remainder) = unsorted_raster.as_chunks(RASTER_FACTOR as usize);
+            //output.insert(char, chunks.clone());
         }
     }
-    //println!("{}", convertData(data));
 }
 
 //returns remainder, chunk
